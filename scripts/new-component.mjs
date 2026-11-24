@@ -127,7 +127,7 @@ const stylePath = join(root, 'src', 'style.css')
 let style = readFileSync(stylePath, 'utf8')
 const importLine = `@import "./components/${kebab}/style.css";`
 if (!style.includes(importLine)) {
-  const marker = '/* 4 ── Tailwind directives'
+  const marker = '/* 5 ── Tailwind directives'
   if (!style.includes(marker)) {
     console.error('Could not find the component-import section in src/style.css')
     process.exit(1)

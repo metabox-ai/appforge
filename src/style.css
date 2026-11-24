@@ -4,8 +4,9 @@
    Import order matters:
      1. Tailwind itself          (must be first)
      2. Global design tokens     (src/tokens/semantic.css)
-     3. Component styles         (one @import per component folder)
-     4. Tailwind directives      (@source / @custom-variant / @theme)
+     3. Layout styles            (one @import per layout folder)
+     4. Component styles         (one @import per component folder)
+     5. Tailwind directives      (@source / @custom-variant / @theme)
 
    Every component lives in src/components/<name>/style.css and is wrapped in
    `@layer components`, so its rules land in Tailwind's components layer and
@@ -28,14 +29,21 @@
 /* 2 ── Global design tokens ─────────────────────────────────────────────── */
 @import "./tokens/semantic.css";
 
-/* 3 ── Component styles ─────────────────────────────────────────────────── */
+/* 3 ── Layout styles ────────────────────────────────────────────────────── */
+/*
+ * Abstract layouts — layers, order and geometry only. They never render a
+ * concrete component of their own; each slot is a place for one to go.
+ */
+@import "./layout/intro/style.css";
+
+/* 4 ── Component styles ─────────────────────────────────────────────────── */
 @import "./components/button/style.css";
 @import "./components/card/style.css";
 @import "./components/badge/style.css";
 @import "./components/section/style.css";
 @import "./components/shape-section/style.css";
 
-/* 4 ── Tailwind directives ──────────────────────────────────────────────── */
+/* 5 ── Tailwind directives ──────────────────────────────────────────────── */
 
 /* Class-name scanning. Paths are relative to this file.
    These are the ONLY sources — see the `source(none)` note above. */

@@ -38,13 +38,20 @@ uses it.
 
 ---
 
-## Layout
+## Project layout
 
 ```
 src/
 ├── style.css                      ← Tailwind entry point (imports everything)
 ├── tokens/
 │   └── semantic.css               ← GLOBAL tokens (light + .dark)
+├── layout/                        ← ABSTRACT layouts (layers + geometry)
+│   ├── index.ts
+│   └── intro/
+│       ├── style.css              ← layout tokens, inside @layer components
+│       ├── Intro.tsx
+│       ├── IntroDetailed.tsx
+│       └── index.ts
 ├── components/
 │   ├── index.ts                   ← auto-generated barrel
 │   ├── button/
@@ -98,6 +105,7 @@ components layer and stays overridable by utilities:
 ```css
 @import "tailwindcss";
 @import "./tokens/semantic.css";
+@import "./layout/intro/style.css";        ← one line per layout
 @import "./components/button/style.css";   ← one line per component
 @import "./components/card/style.css";
 ```
@@ -190,6 +198,69 @@ style, which outranks the component layer:
 
 An inline style still resolves `var(--token)` against the live theme, so the
 surface re-themes with the rest of the page in dark mode.
+
+---
+
+## Abstract layouts
+
+`src/layout/` is where **abstract layouts** live. A layout is not a component:
+it defines the layers, their order and their geometry, and it renders no
+concrete components of its own. Each slot is a place for the caller to drop
+one.
+
+```tsx
+<Intro
+  subtitle={<Badge>New</Badge>}
+  title={<h1>Build faster</h1>}
+/>
+
+<IntroDetailed
+  subtitle={<Badge>Case study</Badge>}
+  title={<h1>Rebuilding the editor</h1>}
+  slogan={<span>By Ada Lovelace</span>}
+  detail="A short paragraph of body copy."
+/>
+```
+
+| Layout | Slots, in order |
+|---|---|
+| `Intro` | `subtitle` → `title` |
+| `IntroDetailed` | `subtitle` → `title` → `slogan` → `detail` |
+
+**Slots are props, not children.** The layout owns the arrangement, so the
+slot names are typed and the order is fixed — a title can't accidentally land
+in the slogan slot. The consumer decides what each slot contains and how it
+looks; the layout decides only where it sits and how much room it gets.
+
+Two details worth knowing:
+
+- The `title` slot shadows the standard HTML `title` attribute, so the props
+  extend `Omit<HTMLAttributes<HTMLDivElement>, 'title'>` and re-declare it.
+- The `detail` slot renders a `<p>`, because it is body copy. The `title` slot
+  is a plain `<div>` — pass the heading element yourself, so the heading level
+  stays under your control.
+
+**All the geometry is in tokens** in `src/layout/intro/style.css`:
+
+```css
+.intro {
+  --intro-padding-inline: 1.5rem;
+  --intro-padding-block: 2rem;
+  --intro-max-width: 56rem;
+  --intro-text-align: center;
+
+  --intro-gap: 0.75rem;          /* space between slots */
+  --intro-title-gap: var(--intro-gap);
+  --intro-detail-max-width: 38rem;  /* measure */
+}
+```
+
+Each spacing token is the space that sits **above** its slot, so an omitted
+slot leaves no gap behind and the stack never depends on how many siblings it
+has.
+
+Layouts are imported into `src/style.css` in their own section, before the
+component styles.
 
 ---
 

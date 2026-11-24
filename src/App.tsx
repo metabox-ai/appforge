@@ -12,6 +12,7 @@ import {
   Section,
   ShapeSection,
 } from './components'
+import { Intro, IntroDetailed } from './layout'
 
 const SWATCHES = [
   { name: 'primary', varName: '--primary' },
@@ -233,6 +234,40 @@ export default function App() {
               The same silhouette, clipping an image background.
             </p>
           </ShapeSection>
+        </CardContent>
+      </Card>
+
+      {/* ── Layouts ─────────────────────────────────────────────────────── */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Intro</CardTitle>
+          <CardDescription>
+            An abstract layout — layers, order and geometry only. Every slot
+            takes a component; the layout decides where it sits and how much
+            room it gets.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-8">
+          <Intro
+            subtitle={<Badge variant="info">Abstract layout</Badge>}
+            title={
+              <h2 className="text-2xl font-semibold tracking-tight">
+                Slots hold components
+              </h2>
+            }
+          />
+
+          <IntroDetailed
+            subtitle={<Badge variant="success">Component</Badge>}
+            title={
+              <h2 className="text-2xl font-semibold tracking-tight">
+                IntroDetailed
+              </h2>
+            }
+            slogan={<span className="text-content-muted text-sm">By Mavis</span>}
+            detail="Subtitle, title, slogan and detail — the slogan attributes
+            the block, the detail carries the body copy."
+          />
         </CardContent>
       </Card>
 

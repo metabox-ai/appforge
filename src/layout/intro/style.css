@@ -1,0 +1,90 @@
+/*
+ * Intro — abstract layout, component-scoped semantic tokens
+ * --------------------------------------------------------------------------
+ * An abstract layout defines ONLY the layers, their order and their geometry.
+ * It renders no concrete components of its own: each slot is a place where a
+ * caller drops a component, and the slot decides nothing about how it looks.
+ *
+ * Tokens are namespaced `--intro-*` and reference the global tokens, so the
+ * layout re-themes automatically in light/dark mode.
+ *
+ * Every measurement lives here as a token. The TSX names slots and nothing
+ * else — no colour, radius or length appears there.
+ *
+ * Slot order is fixed by the layout:
+ *
+ *   Intro           [subtitle] [title]
+ *   IntroDetailed   [subtitle] [title] [slogan] [detail]
+ *
+ * JSX usage:
+ *   <Intro subtitle={<Badge>New</Badge>} title={<h1>…</h1>} />
+ */
+
+@layer components {
+  .intro {
+    /* ── geometry ────────────────────────────────────────────────────── */
+    --intro-padding-inline: 1.5rem;
+    --intro-padding-block: 2rem;
+    --intro-max-width: 56rem;
+    --intro-margin-inline: auto;
+    --intro-text-align: center;
+
+    /* ── spacing between slots ───────────────────────────────────────── */
+    /*
+     * Each token is the space that sits ABOVE its slot, so an omitted slot
+     * leaves no gap behind and the stack never depends on sibling count.
+     */
+    --intro-gap: 0.75rem;
+    --intro-subtitle-gap: 0rem;
+    --intro-title-gap: var(--intro-gap);
+    --intro-slogan-gap: var(--intro-gap);
+    --intro-detail-gap: var(--intro-gap);
+
+    /* ── measures (line length) ───────────────────────────────────────── */
+    --intro-title-max-width: 48rem;
+    --intro-slogan-max-width: 40rem;
+    --intro-detail-max-width: 40rem;
+
+    /* ── component rules ─────────────────────────────────────────────── */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: var(--intro-text-align);
+    max-width: var(--intro-max-width);
+    margin-inline: var(--intro-margin-inline);
+    padding: var(--intro-padding-block) var(--intro-padding-inline);
+  }
+
+  /* ── slots ─────────────────────────────────────────────────────────────
+   * A slot is a layer: it holds whatever component the caller passes and
+   * contributes nothing but space and measure.
+   */
+
+  .intro__subtitle {
+    margin-top: var(--intro-subtitle-gap);
+    max-width: 100%;
+  }
+
+  .intro__title {
+    margin-top: var(--intro-title-gap);
+    max-width: var(--intro-title-max-width);
+  }
+
+  .intro__slogan {
+    margin-top: var(--intro-slogan-gap);
+    max-width: var(--intro-slogan-max-width);
+  }
+
+  .intro__detail {
+    margin-top: var(--intro-detail-gap);
+    max-width: var(--intro-detail-max-width);
+  }
+
+  /* ── variants ───────────────────────────────────────────────────────── */
+  /* The detailed variant adds a byline and a paragraph, so the paragraph
+     gets a tighter measure than the heading it sits under. */
+  .intro--detailed {
+    --intro-detail-max-width: 38rem;
+  }
+}
