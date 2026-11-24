@@ -55,9 +55,17 @@ src/
 │   │   ├── style.css
 │   │   ├── Card.tsx
 │   │   └── index.ts
-│   └── badge/
+│   ├── badge/
+│   │   ├── style.css
+│   │   ├── Badge.tsx
+│   │   └── index.ts
+│   ├── section/
+│   │   ├── style.css
+│   │   ├── Section.tsx
+│   │   └── index.ts
+│   └── shape-section/
 │       ├── style.css
-│       ├── Badge.tsx
+│       ├── ShapeSection.tsx
 │       └── index.ts
 ├── App.tsx
 └── main.tsx
@@ -147,6 +155,88 @@ Rules that make this work:
   never collide with a global token or another component.
 - **Express intent, not appearance**: `--tooltip-background`, not `--tooltip-blue`.
 - **Prefer global tokens as the source value**: `var(--primary)`, not a hex code.
+
+---
+
+## Props that pick a token
+
+`Section` and `ShapeSection` expose props, but none of them carry a raw value.
+A prop selects a *token*, and the token carries the value — so the usual rule
+still holds and the TSX never mentions a colour, radius or length.
+
+`px` / `py` take a spacing-scale step. Each step is a token in the component's
+stylesheet, and a modifier class points at it:
+
+```css
+/* src/components/section/style.css */
+.section {
+  --section-padding-inline: var(--section-padding-inline-4);
+}
+.section--px-6 {
+  --section-padding-inline: var(--section-padding-inline-6);
+}
+```
+
+```tsx
+<Section px={6} py={4} />   /* → class="section section--px-6 section--py-4" */
+```
+
+The `bg` prop is the one deliberate exception. It is applied through an inline
+style, which outranks the component layer:
+
+```tsx
+<Section bg="var(--surface-secondary)" />
+```
+
+An inline style still resolves `var(--token)` against the live theme, so the
+surface re-themes with the rest of the page in dark mode.
+
+---
+
+## ShapeSection — cut edges
+
+`ShapeSection` is a `<section>` whose edge is cut by a silhouette instead of
+ending in a plain rectangle.
+
+```tsx
+<ShapeSection shape="cloud" position="bottom" bg="var(--primary)" py={8}>
+  …
+</ShapeSection>
+```
+
+| Prop | Values | Notes |
+|---|---|---|
+| `shape` | `slant` · `cloud` | The silhouette. |
+| `position` | `top` · `bottom` | Which edge the silhouette is applied to. |
+| `bg` | any CSS colour | Prefer a global token, e.g. `var(--primary)`. |
+| `bgImage` | a URL | Background image. |
+| `px` / `py` | spacing step | Same scale as `Section`. |
+
+**The background lives on its own layer.** The component renders a masked
+`.shape-section__bg` behind a `.shape-section__content` layer:
+
+```html
+<section class="shape-section shape-section--cloud-bottom">
+  <div class="shape-section__bg"></div>   ← the fill + the cut
+  <div class="shape-section__content">…</div>  ← never clipped
+</section>
+```
+
+That split matters twice:
+
+- The silhouette never clips the **content** — only the fill.
+- A CSS `mask` (or `clip-path`) clips an element's *entire* painted output,
+  including `background-image`. So `bgImage` is cut by exactly the same
+  outline as a solid fill. One silhouette, either kind of background.
+
+The two silhouettes use different tools, because they need different things:
+
+- **`slant`** uses `clip-path: polygon(...)`. The cut needs a *fixed* depth — a
+  depth that scaled with the section's height would flatten into an almost
+  invisible lean across a wide, short section.
+- **`cloud`** uses a `mask` made from an inline SVG tile of half-ellipse
+  bumps, repeated with `mask-repeat: repeat-x`. The tile has a fixed width, so
+  the bumps stay the same size however wide the section gets.
 
 ---
 

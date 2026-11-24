@@ -32,6 +32,8 @@
 @import "./components/button/style.css";
 @import "./components/card/style.css";
 @import "./components/badge/style.css";
+@import "./components/section/style.css";
+@import "./components/shape-section/style.css";
 
 /* 4 ── Tailwind directives ──────────────────────────────────────────────── */
 

@@ -1,0 +1,132 @@
+/*
+ * Section — component-scoped semantic tokens
+ * --------------------------------------------------------------------------
+ * Tokens are namespaced `--section-*` and reference the global tokens, so the
+ * section re-themes automatically in light/dark mode.
+ *
+ * Padding is exposed as a spacing scale. The `px` / `py` props select a step,
+ * and each step is a token declared here — the TSX picks a modifier class and
+ * never carries a length value.
+ *
+ * The `bg` prop is the one intentional exception: it sets `background-color`
+ * through an inline style, so a caller can hand it any surface (including a
+ * global token such as `var(--primary)`) without needing a new variant class.
+ * An inline style outranks the component layer, so it wins over
+ * `--section-background`.
+ *
+ * JSX usage:
+ *   <section class="section section--px-6 section--py-4">…</section>
+ *   <section class="section" style={{ backgroundColor: 'var(--surface-secondary)' }}>…</section>
+ */
+
+@layer components {
+  .section {
+    /* ── semantic tokens ─────────────────────────────────────────────── */
+    --section-background: transparent;
+    --section-foreground: var(--foreground);
+    --section-padding-inline: var(--section-padding-inline-4);
+    --section-padding-block: var(--section-padding-block-4);
+
+    /* ── spacing scale ───────────────────────────────────────────────── */
+    --section-padding-inline-0: 0rem;
+    --section-padding-inline-1: 0.25rem;
+    --section-padding-inline-2: 0.5rem;
+    --section-padding-inline-3: 0.75rem;
+    --section-padding-inline-4: 1rem;
+    --section-padding-inline-5: 1.5rem;
+    --section-padding-inline-6: 2rem;
+    --section-padding-inline-7: 2.5rem;
+    --section-padding-inline-8: 3rem;
+
+    --section-padding-block-0: 0rem;
+    --section-padding-block-1: 0.25rem;
+    --section-padding-block-2: 0.5rem;
+    --section-padding-block-3: 0.75rem;
+    --section-padding-block-4: 1rem;
+    --section-padding-block-5: 1.5rem;
+    --section-padding-block-6: 2rem;
+    --section-padding-block-7: 2.5rem;
+    --section-padding-block-8: 3rem;
+
+    /* ── component rules ─────────────────────────────────────────────── */
+    display: block;
+    box-sizing: border-box;
+    background-color: var(--section-background);
+    color: var(--section-foreground);
+    padding: var(--section-padding-block) var(--section-padding-inline);
+  }
+
+  /* ── inline (horizontal) padding steps ──────────────────────────────── */
+  .section--px-0 {
+    --section-padding-inline: var(--section-padding-inline-0);
+  }
+
+  .section--px-1 {
+    --section-padding-inline: var(--section-padding-inline-1);
+  }
+
+  .section--px-2 {
+    --section-padding-inline: var(--section-padding-inline-2);
+  }
+
+  .section--px-3 {
+    --section-padding-inline: var(--section-padding-inline-3);
+  }
+
+  .section--px-4 {
+    --section-padding-inline: var(--section-padding-inline-4);
+  }
+
+  .section--px-5 {
+    --section-padding-inline: var(--section-padding-inline-5);
+  }
+
+  .section--px-6 {
+    --section-padding-inline: var(--section-padding-inline-6);
+  }
+
+  .section--px-7 {
+    --section-padding-inline: var(--section-padding-inline-7);
+  }
+
+  .section--px-8 {
+    --section-padding-inline: var(--section-padding-inline-8);
+  }
+
+  /* ── block (vertical) padding steps ─────────────────────────────────── */
+  .section--py-0 {
+    --section-padding-block: var(--section-padding-block-0);
+  }
+
+  .section--py-1 {
+    --section-padding-block: var(--section-padding-block-1);
+  }
+
+  .section--py-2 {
+    --section-padding-block: var(--section-padding-block-2);
+  }
+
+  .section--py-3 {
+    --section-padding-block: var(--section-padding-block-3);
+  }
+
+  .section--py-4 {
+    --section-padding-block: var(--section-padding-block-4);
+  }
+
+  .section--py-5 {
+    --section-padding-block: var(--section-padding-block-5);
+  }
+
+  .section--py-6 {
+    --section-padding-block: var(--section-padding-block-6);
+  }
+
+  .section--py-7 {
+    --section-padding-block: var(--section-padding-block-7);
+  }
+
+  .section--py-8 {
+    --section-padding-block: var(--section-padding-block-8);
+  }
+}

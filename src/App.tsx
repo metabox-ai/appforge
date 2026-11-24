@@ -9,6 +9,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  Section,
+  ShapeSection,
 } from './components'
 
 const SWATCHES = [
@@ -21,6 +23,11 @@ const SWATCHES = [
   { name: 'warning', varName: '--warning' },
   { name: 'info', varName: '--info' },
 ]
+
+/* A gradient used as an image background, to show that the silhouette clips
+   an image exactly like it clips a solid fill. */
+const GRADIENT_IMAGE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g)'/%3E%3C/svg%3E"
 
 function useTheme() {
   const [dark, setDark] = useState(
@@ -109,6 +116,123 @@ export default function App() {
             <Badge variant="info">Info</Badge>
             <Badge variant="outline">Outline</Badge>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* ── Section ────────────────────────────────────────────────────── */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Section</CardTitle>
+          <CardDescription>
+            A <code>&lt;section&gt;</code> wrapper with <code>px</code> /{' '}
+            <code>py</code> spacing steps, and a <code>bg</code> applied through
+            an inline style.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <Section
+            px={4}
+            py={3}
+            bg="var(--surface-secondary)"
+            className="border-border rounded-lg border"
+          >
+            <p className="text-content-secondary text-sm">
+              <code>px={'{4}'}</code> · <code>py={'{3}'}</code> ·{' '}
+              <code>bg="var(--surface-secondary)"</code>
+            </p>
+          </Section>
+
+          <Section
+            px={6}
+            py={5}
+            bg="var(--primary-subtle)"
+            className="border-border rounded-lg border"
+          >
+            <p className="text-sm">
+              <code>px={'{6}'}</code> · <code>py={'{5}'}</code> ·{' '}
+              <code>bg="var(--primary-subtle)"</code>
+            </p>
+          </Section>
+
+          <Section className="border-border rounded-lg border">
+            <p className="text-content-secondary text-sm">
+              No props — falls back to <code>px={'{4}'}</code> /{' '}
+              <code>py={'{4}'}</code> and no background.
+            </p>
+          </Section>
+        </CardContent>
+      </Card>
+
+      {/* ── ShapeSection ───────────────────────────────────────────────── */}
+      <Card>
+        <CardHeader>
+          <CardTitle>ShapeSection</CardTitle>
+          <CardDescription>
+            A <code>&lt;section&gt;</code> whose edge is cut by a CSS mask or
+            clip-path on its background layer. The cut applies to whatever fills
+            that layer — solid colour or image.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-6">
+          <ShapeSection
+            shape="slant"
+            position="top"
+            bg="var(--surface-secondary)"
+            px={4}
+            py={6}
+          >
+            <p className="text-content-secondary text-sm">
+              <code>shape="slant"</code> · <code>position="top"</code>
+            </p>
+          </ShapeSection>
+
+          <ShapeSection
+            shape="slant"
+            position="bottom"
+            bg="var(--surface-secondary)"
+            px={4}
+            py={6}
+          >
+            <p className="text-content-secondary text-sm">
+              <code>shape="slant"</code> · <code>position="bottom"</code>
+            </p>
+          </ShapeSection>
+
+          <ShapeSection
+            shape="cloud"
+            position="top"
+            bg="var(--primary-subtle)"
+            px={4}
+            py={6}
+          >
+            <p className="text-sm">
+              <code>shape="cloud"</code> · <code>position="top"</code>
+            </p>
+          </ShapeSection>
+
+          <ShapeSection
+            shape="cloud"
+            position="bottom"
+            bg="var(--primary-subtle)"
+            px={4}
+            py={6}
+          >
+            <p className="text-sm">
+              <code>shape="cloud"</code> · <code>position="bottom"</code>
+            </p>
+          </ShapeSection>
+
+          <ShapeSection
+            shape="cloud"
+            position="bottom"
+            bgImage={GRADIENT_IMAGE}
+            px={4}
+            py={6}
+          >
+            <p className="text-sm font-medium text-white">
+              The same silhouette, clipping an image background.
+            </p>
+          </ShapeSection>
         </CardContent>
       </Card>
 

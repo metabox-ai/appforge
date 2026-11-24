@@ -1,0 +1,224 @@
+/*
+ * ShapeSection — component-scoped semantic tokens
+ * --------------------------------------------------------------------------
+ * Tokens are namespaced `--shape-section-*` and reference the global tokens, so
+ * the section re-themes automatically in light/dark mode.
+ *
+ * How the shaping works
+ * ---------------------
+ * The coloured surface lives on a dedicated background layer (`.shape-section__bg`)
+ * that sits behind the content and carries a CSS mask. A mask clips an element's
+ * entire painted output — background colour AND background image alike — so an
+ * image background is cut by exactly the same silhouette as a solid fill.
+ *
+ * The content lives on its own layer, so the mask never clips the text.
+ *
+ * The mask is an inline SVG data URI. `preserveAspectRatio="none"` lets the
+ * silhouette stretch to whatever size the section is, so the cut scales with
+ * the layout instead of repeating at a fixed size.
+ *
+ * Padding follows the same spacing scale as Section: the `px` / `py` props
+ * select a step, and each step is a token declared here.
+ *
+ * JSX usage:
+ *   <section class="shape-section shape-section--cloud-bottom shape-section--py-8">
+ *   <section class="shape-section shape-section--slant-top">
+ */
+
+@layer components {
+  .shape-section {
+    /* ── semantic tokens ─────────────────────────────────────────────── */
+    --shape-section-background: transparent;
+    --shape-section-foreground: var(--foreground);
+    --shape-section-padding-inline: var(--shape-section-padding-inline-4);
+    --shape-section-padding-block: var(--shape-section-padding-block-4);
+    --shape-section-mask-image: none;
+    --shape-section-mask-size: 100% 100%;
+    --shape-section-mask-repeat: no-repeat;
+    --shape-section-mask-position: center;
+    --shape-section-clip-path: none;
+    --shape-section-slant-depth: 2.5rem;
+
+    /* ── spacing scale ───────────────────────────────────────────────── */
+    --shape-section-padding-inline-0: 0rem;
+    --shape-section-padding-inline-1: 0.25rem;
+    --shape-section-padding-inline-2: 0.5rem;
+    --shape-section-padding-inline-3: 0.75rem;
+    --shape-section-padding-inline-4: 1rem;
+    --shape-section-padding-inline-5: 1.5rem;
+    --shape-section-padding-inline-6: 2rem;
+    --shape-section-padding-inline-7: 2.5rem;
+    --shape-section-padding-inline-8: 3rem;
+
+    --shape-section-padding-block-0: 0rem;
+    --shape-section-padding-block-1: 0.25rem;
+    --shape-section-padding-block-2: 0.5rem;
+    --shape-section-padding-block-3: 0.75rem;
+    --shape-section-padding-block-4: 1rem;
+    --shape-section-padding-block-5: 1.5rem;
+    --shape-section-padding-block-6: 2rem;
+    --shape-section-padding-block-7: 2.5rem;
+    --shape-section-padding-block-8: 3rem;
+
+    /* ── component rules ─────────────────────────────────────────────── */
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    color: var(--shape-section-foreground);
+    padding: var(--shape-section-padding-block) var(--shape-section-padding-inline);
+  }
+
+  /* ── background layer — carries the fill and the mask ──────────────── */
+  .shape-section__bg {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    background-color: var(--shape-section-background);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    -webkit-mask-image: var(--shape-section-mask-image);
+    mask-image: var(--shape-section-mask-image);
+    -webkit-mask-size: var(--shape-section-mask-size);
+    mask-size: var(--shape-section-mask-size);
+    -webkit-mask-repeat: var(--shape-section-mask-repeat);
+    mask-repeat: var(--shape-section-mask-repeat);
+    -webkit-mask-position: var(--shape-section-mask-position);
+    mask-position: var(--shape-section-mask-position);
+    mask-mode: alpha;
+    clip-path: var(--shape-section-clip-path);
+    pointer-events: none;
+  }
+
+  /* ── content layer — never clipped by the mask ─────────────────────── */
+  .shape-section__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── shapes ─────────────────────────────────────────────────────────── */
+  /*
+   * Slant — a single diagonal cut across the full width.
+   *
+   * A clip-path is used rather than a mask here, because the cut needs a
+   * *fixed* depth: a depth that scales with the section height would flatten
+   * into an almost invisible lean on a wide, short section. A clip-path also
+   * clips the background image, exactly like the mask does.
+   *
+   * Top: the cut runs up from the left, so the top-left corner is shaved off.
+   * Bottom: the vertical mirror of that, shaving off the bottom-left corner.
+   */
+  .shape-section--slant-top {
+    --shape-section-clip-path: polygon(
+      0 var(--shape-section-slant-depth),
+      100% 0,
+      100% 100%,
+      0 100%
+    );
+  }
+
+  .shape-section--slant-bottom {
+    --shape-section-clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - var(--shape-section-slant-depth)),
+      0 100%
+    );
+  }
+
+  /*
+   * Cloud — a scalloped edge made of shallow half-ellipse bumps.
+   *
+   * The mask is a 360px-wide tile that repeats across the section, so the
+   * bumps keep a fixed width no matter how wide the section is. The tile
+   * stretches vertically, which makes the bump depth a proportion of the
+   * section's height.
+   */
+  .shape-section--cloud-bottom {
+    --shape-section-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 H360 V85 A120,15 0 0 1 240,85 A120,15 0 0 1 120,85 A120,15 0 0 1 0,85 Z' fill='%23fff'/%3E%3C/svg%3E");
+    --shape-section-mask-size: 360px 100%;
+    --shape-section-mask-repeat: repeat-x;
+    --shape-section-mask-position: left top;
+  }
+
+  .shape-section--cloud-top {
+    --shape-section-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 H360 V15 A120,15 0 0 0 240,15 A120,15 0 0 0 120,15 A120,15 0 0 0 0,15 Z' fill='%23fff'/%3E%3C/svg%3E");
+    --shape-section-mask-size: 360px 100%;
+    --shape-section-mask-repeat: repeat-x;
+    --shape-section-mask-position: left top;
+  }
+
+  /* ── inline (horizontal) padding steps ──────────────────────────────── */
+  .shape-section--px-0 {
+    --shape-section-padding-inline: var(--shape-section-padding-inline-0);
+  }
+
+  .shape-section--px-1 {
+    --shape-section-padding-inline: var(--shape-section-padding-inline-1);
+  }
+
+  .shape-section--px-2 {
+    --shape-section-padding-inline: var(--shape-section-padding-inline-2);
+  }
+
+  .shape-section--px-3 {
+    --shape-section-padding-inline: var(--shape-section-padding-inline-3);
+  }
+
+  .shape-section--px-4 {
+    --shape-section-padding-inline: var(--shape-section-padding-inline-4);
+  }
+
+  .shape-section--px-5 {
+    --shape-section-padding-inline: var(--shape-section-padding-inline-5);
+  }
+
+  .shape-section--px-6 {
+    --shape-section-padding-inline: var(--shape-section-padding-inline-6);
+  }
+
+  .shape-section--px-7 {
+    --shape-section-padding-inline: var(--shape-section-padding-inline-7);
+  }
+
+  .shape-section--px-8 {
+    --shape-section-padding-inline: var(--shape-section-padding-inline-8);
+  }
+
+  /* ── block (vertical) padding steps ─────────────────────────────────── */
+  .shape-section--py-0 {
+    --shape-section-padding-block: var(--shape-section-padding-block-0);
+  }
+
+  .shape-section--py-1 {
+    --shape-section-padding-block: var(--shape-section-padding-block-1);
+  }
+
+  .shape-section--py-2 {
+    --shape-section-padding-block: var(--shape-section-padding-block-2);
+  }
+
+  .shape-section--py-3 {
+    --shape-section-padding-block: var(--shape-section-padding-block-3);
+  }
+
+  .shape-section--py-4 {
+    --shape-section-padding-block: var(--shape-section-padding-block-4);
+  }
+
+  .shape-section--py-5 {
+    --shape-section-padding-block: var(--shape-section-padding-block-5);
+  }
+
+  .shape-section--py-6 {
+    --shape-section-padding-block: var(--shape-section-padding-block-6);
+  }
+
+  .shape-section--py-7 {
+    --shape-section-padding-block: var(--shape-section-padding-block-7);
+  }
+
+  .shape-section--py-8 {
+    --shape-section-padding-block: var(--shape-section-padding-block-8);
+  }
+}
