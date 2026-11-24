@@ -5,9 +5,9 @@
 #   bash scripts/push.sh                 # auto message
 #   bash scripts/push.sh "feat: add tooltip"
 #
-# Auth comes from the GITHUB_TOKEN secret, read at call time by the
-# credential helper (see .home/.git-credentials-helper.sh). Nothing is
-# written to disk and the token never appears in .git/config.
+# Auth comes from the GITHUB_TOKEN secret, read at call time by
+# scripts/git-credentials-helper.sh. Nothing is written to disk and the token
+# never appears in .git/config.
 #
 # Requires the secret to be present in the environment:
 #   mavis secret create --name=GITHUB_TOKEN --value=<pat>
@@ -25,6 +25,11 @@ if [ -z "${GITHUB_TOKEN:-}" ]; then
   echo "       store it with: mavis secret create --name=GITHUB_TOKEN --value=<pat>" >&2
   exit 1
 fi
+
+# Repo-local, relative helper path — keeps working wherever this is checked
+# out, and survives a fresh clone without any extra setup.
+chmod +x scripts/git-credentials-helper.sh
+git config --local credential.helper "scripts/git-credentials-helper.sh"
 
 msg="${1:-chore: sync $(date '+%Y-%m-%d %H:%M:%S')}"
 
