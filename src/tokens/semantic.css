@@ -1,0 +1,361 @@
+/*
+ * semantic.css
+ *
+ * Semantic color tokens for a Tailwind CSS v4 + shadcn/ui design system.
+ *
+ * Usage:
+ *   1. Import this file after your primitive palette is defined, or use the
+ *      literal color values below as the initial theme.
+ *   2. Keep shadcn's standard token names for compatibility.
+ *   3. Add the matching @theme inline mappings in your main Tailwind CSS file.
+ *   4. Apply .dark to the root element (or use [data-theme="dark"]).
+ *
+ * Naming principles:
+ *   - "primary"   = highest-priority brand action.
+ *   - "secondary" = lower-priority supporting action/surface, not a lighter
+ *                   shade of primary.
+ *   - "muted"     = intentionally low-emphasis content or surface.
+ *   - "accent"    = attention/highlight treatment, not necessarily an action.
+ *   - "surface-*" = general content layers, independent of component names.
+ *   - "*-foreground" = readable content placed on the corresponding color.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* -----------------------------------------------------------------------
+   * shadcn/ui core tokens
+   * --------------------------------------------------------------------- */
+
+  --background: oklch(0.985 0.002 247);
+  --foreground: oklch(0.145 0.015 257);
+
+  --card: oklch(1 0 0);
+  --card-foreground: var(--foreground);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(0.546 0.215 262);
+  --primary-foreground: oklch(0.985 0.002 247);
+
+  --secondary: oklch(0.965 0.006 257);
+  --secondary-foreground: oklch(0.25 0.02 257);
+
+  --muted: oklch(0.965 0.006 257);
+  --muted-foreground: oklch(0.52 0.02 257);
+
+  --accent: oklch(0.94 0.025 255);
+  --accent-foreground: oklch(0.28 0.08 262);
+
+  --destructive: oklch(0.577 0.245 27);
+  --destructive-foreground: oklch(0.985 0.002 247);
+
+  --border: oklch(0.91 0.01 257);
+  --input: oklch(0.91 0.01 257);
+  --ring: oklch(0.546 0.215 262);
+
+  /* -----------------------------------------------------------------------
+   * Surface hierarchy
+   *
+   * background:       page/application canvas
+   * surface:          ordinary content surface
+   * surface-secondary: subtly recessed/contrasting region
+   * surface-tertiary: another recessed level, used sparingly
+   * surface-elevated: floating layer above nearby content
+   * surface-hover:    transient pointer-hover treatment
+   * surface-selected: persistent selected/current treatment
+   * surface-inverse:  intentionally inverted/dark region
+   * surface-overlay:  translucent modal/backdrop layer
+   * --------------------------------------------------------------------- */
+
+  --surface: oklch(1 0 0);
+  --surface-foreground: var(--foreground);
+
+  --surface-secondary: oklch(0.965 0.006 257);
+  --surface-secondary-foreground: var(--foreground);
+
+  --surface-tertiary: oklch(0.94 0.008 257);
+  --surface-tertiary-foreground: var(--foreground);
+
+  --surface-elevated: oklch(1 0 0);
+  --surface-elevated-foreground: var(--foreground);
+
+  --surface-hover: oklch(0.955 0.009 257);
+  --surface-selected: oklch(0.93 0.035 260);
+
+  --surface-inverse: oklch(0.20 0.02 257);
+  --surface-inverse-foreground: oklch(0.985 0.002 247);
+
+  --surface-overlay: oklch(0.15 0.015 257 / 0.48);
+
+  /* -----------------------------------------------------------------------
+   * Text hierarchy
+   *
+   * foreground remains the shadcn-compatible default text token.
+   * text-primary is the strongest content emphasis; it may alias foreground.
+   * --------------------------------------------------------------------- */
+
+  --text-primary: var(--foreground);
+  --text-secondary: oklch(0.39 0.02 257);
+  --text-muted: var(--muted-foreground);
+  --text-disabled: oklch(0.68 0.015 257);
+  --text-inverse: var(--surface-inverse-foreground);
+  --text-placeholder: oklch(0.58 0.018 257);
+  --text-link: var(--primary);
+  --text-link-hover: oklch(0.46 0.20 262);
+  --text-link-visited: oklch(0.52 0.16 300);
+
+  /* -----------------------------------------------------------------------
+   * Borders and separators
+   * --------------------------------------------------------------------- */
+
+  --border-subtle: oklch(0.94 0.006 257);
+  --border-strong: oklch(0.82 0.015 257);
+  --border-focus: var(--ring);
+  --border-disabled: oklch(0.93 0.006 257);
+
+  /* -----------------------------------------------------------------------
+   * Interaction states
+   * --------------------------------------------------------------------- */
+
+  --primary-hover: oklch(0.49 0.21 262);
+  --primary-active: oklch(0.44 0.19 262);
+  --primary-subtle: oklch(0.94 0.035 260);
+  --primary-muted: oklch(0.88 0.07 260);
+
+  --secondary-hover: oklch(0.93 0.008 257);
+  --accent-hover: oklch(0.90 0.035 255);
+
+  --disabled: oklch(0.94 0.006 257);
+  --disabled-foreground: oklch(0.62 0.012 257);
+
+  /* -----------------------------------------------------------------------
+   * Form-control roles
+   *
+   * input preserves shadcn's standard input-border token.
+   * These additional tokens cover backgrounds and states when needed.
+   * --------------------------------------------------------------------- */
+
+  --input-background: var(--surface);
+  --input-foreground: var(--foreground);
+  --input-hover: var(--surface-hover);
+  --input-focus: var(--surface);
+  --input-disabled: var(--disabled);
+  --input-disabled-foreground: var(--disabled-foreground);
+  --input-placeholder: var(--text-placeholder);
+  --input-error: var(--destructive);
+
+  /* -----------------------------------------------------------------------
+   * Feedback/status colors
+   *
+   * Use the foreground companion when placing text/icons on a solid status
+   * background. For subtle alerts, use the corresponding *-subtle token.
+   * --------------------------------------------------------------------- */
+
+  --success: oklch(0.62 0.16 155);
+  --success-foreground: oklch(0.985 0.002 247);
+  --success-subtle: oklch(0.95 0.045 155);
+  --success-border: oklch(0.83 0.10 155);
+
+  --warning: oklch(0.76 0.16 75);
+  --warning-foreground: oklch(0.22 0.035 75);
+  --warning-subtle: oklch(0.96 0.045 85);
+  --warning-border: oklch(0.86 0.10 85);
+
+  --danger: var(--destructive);
+  --danger-foreground: var(--destructive-foreground);
+  --danger-subtle: oklch(0.95 0.035 25);
+  --danger-border: oklch(0.84 0.10 25);
+
+  --info: oklch(0.58 0.16 245);
+  --info-foreground: oklch(0.985 0.002 247);
+  --info-subtle: oklch(0.95 0.035 245);
+  --info-border: oklch(0.84 0.08 245);
+
+  /* -----------------------------------------------------------------------
+   * Focus, selection and overlays
+   * --------------------------------------------------------------------- */
+
+  --ring-offset: var(--background);
+  --selection: oklch(0.86 0.09 255);
+  --selection-foreground: oklch(0.18 0.04 257);
+  --overlay: oklch(0.15 0.015 257 / 0.48);
+  --backdrop: oklch(0.15 0.015 257 / 0.48);
+
+  /* -----------------------------------------------------------------------
+   * Data visualization
+   *
+   * Keep these distinct enough to distinguish series. Check contrast and
+   * color-vision accessibility in the actual chart type.
+   * --------------------------------------------------------------------- */
+
+  --chart-1: oklch(0.60 0.19 255);
+  --chart-2: oklch(0.65 0.15 155);
+  --chart-3: oklch(0.62 0.15 305);
+  --chart-4: oklch(0.75 0.16 75);
+  --chart-5: oklch(0.62 0.18 25);
+
+  /* -----------------------------------------------------------------------
+   * Sidebar tokens (shadcn/ui convention)
+   * --------------------------------------------------------------------- */
+
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--surface-secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+/* Dark theme: apply class="dark" to <html> or an ancestor. */
+.dark {
+  color-scheme: dark;
+
+  /* shadcn/ui core */
+  --background: oklch(0.16 0.015 257);
+  --foreground: oklch(0.97 0.005 257);
+
+  --card: oklch(0.205 0.018 257);
+  --card-foreground: var(--foreground);
+
+  --popover: oklch(0.205 0.018 257);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(0.72 0.16 260);
+  --primary-foreground: oklch(0.18 0.04 257);
+
+  --secondary: oklch(0.27 0.018 257);
+  --secondary-foreground: oklch(0.94 0.006 257);
+
+  --muted: oklch(0.27 0.018 257);
+  --muted-foreground: oklch(0.70 0.015 257);
+
+  --accent: oklch(0.31 0.045 260);
+  --accent-foreground: oklch(0.94 0.025 255);
+
+  --destructive: oklch(0.60 0.19 25);
+  --destructive-foreground: oklch(0.985 0.002 247);
+
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.72 0.16 260);
+
+  /* Surface hierarchy */
+  --surface: oklch(0.205 0.018 257);
+  --surface-foreground: var(--foreground);
+
+  --surface-secondary: oklch(0.24 0.018 257);
+  --surface-secondary-foreground: var(--foreground);
+
+  --surface-tertiary: oklch(0.28 0.018 257);
+  --surface-tertiary-foreground: var(--foreground);
+
+  --surface-elevated: oklch(0.235 0.02 257);
+  --surface-elevated-foreground: var(--foreground);
+
+  --surface-hover: oklch(0.29 0.02 257);
+  --surface-selected: oklch(0.32 0.055 260);
+
+  --surface-inverse: oklch(0.97 0.005 257);
+  --surface-inverse-foreground: oklch(0.18 0.02 257);
+
+  --surface-overlay: oklch(0.04 0.01 257 / 0.68);
+
+  /* Text */
+  --text-primary: var(--foreground);
+  --text-secondary: oklch(0.82 0.012 257);
+  --text-muted: var(--muted-foreground);
+  --text-disabled: oklch(0.48 0.015 257);
+  --text-inverse: var(--surface-inverse-foreground);
+  --text-placeholder: oklch(0.62 0.015 257);
+  --text-link: var(--primary);
+  --text-link-hover: oklch(0.80 0.13 260);
+  --text-link-visited: oklch(0.78 0.12 305);
+
+  /* Borders */
+  --border-subtle: oklch(1 0 0 / 8%);
+  --border-strong: oklch(1 0 0 / 22%);
+  --border-focus: var(--ring);
+  --border-disabled: oklch(1 0 0 / 8%);
+
+  /* Interaction */
+  --primary-hover: oklch(0.78 0.14 260);
+  --primary-active: oklch(0.66 0.17 260);
+  --primary-subtle: oklch(0.29 0.055 260);
+  --primary-muted: oklch(0.35 0.075 260);
+
+  --secondary-hover: oklch(0.32 0.02 257);
+  --accent-hover: oklch(0.36 0.05 260);
+
+  --disabled: oklch(0.25 0.015 257);
+  --disabled-foreground: oklch(0.52 0.012 257);
+
+  /* Forms */
+  --input-background: var(--surface);
+  --input-foreground: var(--foreground);
+  --input-hover: var(--surface-hover);
+  --input-focus: var(--surface);
+  --input-disabled: var(--disabled);
+  --input-disabled-foreground: var(--disabled-foreground);
+  --input-placeholder: var(--text-placeholder);
+  --input-error: var(--destructive);
+
+  /* Feedback */
+  --success: oklch(0.72 0.14 155);
+  --success-foreground: oklch(0.16 0.025 155);
+  --success-subtle: oklch(0.27 0.045 155);
+  --success-border: oklch(0.42 0.08 155);
+
+  --warning: oklch(0.82 0.14 80);
+  --warning-foreground: oklch(0.20 0.035 75);
+  --warning-subtle: oklch(0.29 0.045 80);
+  --warning-border: oklch(0.46 0.09 80);
+
+  --danger: var(--destructive);
+  --danger-foreground: var(--destructive-foreground);
+  --danger-subtle: oklch(0.29 0.055 25);
+  --danger-border: oklch(0.46 0.10 25);
+
+  --info: oklch(0.74 0.12 245);
+  --info-foreground: oklch(0.17 0.035 245);
+  --info-subtle: oklch(0.27 0.045 245);
+  --info-border: oklch(0.43 0.08 245);
+
+  /* Focus, selection and overlays */
+  --ring-offset: var(--background);
+  --selection: oklch(0.40 0.09 255);
+  --selection-foreground: oklch(0.98 0.005 257);
+  --overlay: oklch(0.04 0.01 257 / 0.68);
+  --backdrop: oklch(0.04 0.01 257 / 0.68);
+
+  /* Charts */
+  --chart-1: oklch(0.72 0.15 255);
+  --chart-2: oklch(0.74 0.13 155);
+  --chart-3: oklch(0.73 0.13 305);
+  --chart-4: oklch(0.82 0.14 80);
+  --chart-5: oklch(0.72 0.16 25);
+
+  /* Sidebar */
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--surface-secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+/*
+ * Optional: use data-theme instead of .dark if your theme engine prefers it.
+ * The .dark selector above remains compatible with shadcn's default setup.
+ *
+ * Example:
+ * <html data-theme="dark" class="dark">
+ *
+ * For additional named themes, define [data-theme="brand-name"] and override
+ * semantic variables there. Do not change component classes per theme.
+ */

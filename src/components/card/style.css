@@ -1,0 +1,100 @@
+/*
+ * Card — component-scoped semantic tokens
+ * --------------------------------------------------------------------------
+ * Tokens are namespaced `--card-*` and reference the global tokens, so the
+ * card re-themes automatically in light/dark mode.
+ *
+ * JSX usage:
+ *   <div class="card">
+ *     <div class="card__header">…</div>
+ *     <div class="card__content">…</div>
+ *     <div class="card__footer">…</div>
+ *   </div>
+ */
+
+@layer components {
+  .card {
+    /* ── semantic tokens ─────────────────────────────────────────────── */
+    --card-surface: var(--card);
+    --card-surface-foreground: var(--card-foreground);
+    --card-border: var(--border);
+    --card-radius: 0.75rem;
+    --card-padding: 1.5rem;
+    --card-gap: 1rem;
+    --card-shadow: 0 1px 2px 0 oklch(0.145 0.015 257 / 0.06),
+      0 1px 3px 0 oklch(0.145 0.015 257 / 0.1);
+
+    /* ── component rules ─────────────────────────────────────────────── */
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+    box-sizing: border-box;
+    background-color: var(--card-surface);
+    color: var(--card-surface-foreground);
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: var(--card-padding);
+    box-shadow: var(--card-shadow);
+  }
+
+  .card--flush {
+    --card-padding: 0;
+    --card-shadow: none;
+  }
+
+  .card--interactive {
+    --card-shadow: 0 1px 2px 0 oklch(0.145 0.015 257 / 0.06),
+      0 8px 24px -12px oklch(0.145 0.015 257 / 0.24);
+    cursor: pointer;
+    transition: box-shadow 150ms ease, border-color 150ms ease;
+  }
+
+  .card--interactive:hover {
+    --card-border: var(--border-strong);
+    --card-shadow: 0 1px 2px 0 oklch(0.145 0.015 257 / 0.06),
+      0 12px 32px -12px oklch(0.145 0.015 257 / 0.28);
+  }
+
+  /* ── parts ──────────────────────────────────────────────────────────── */
+  .card__header {
+    --card-header-gap: 0.375rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-header-gap);
+  }
+
+  .card__title {
+    --card-title-size: 1.0625rem;
+    --card-title-weight: 600;
+    --card-title-color: var(--foreground);
+    margin: 0;
+    font-size: var(--card-title-size);
+    font-weight: var(--card-title-weight);
+    line-height: 1.4;
+    color: var(--card-title-color);
+  }
+
+  .card__description {
+    --card-description-size: 0.875rem;
+    --card-description-color: var(--muted-foreground);
+    margin: 0;
+    font-size: var(--card-description-size);
+    line-height: 1.6;
+    color: var(--card-description-color);
+  }
+
+  .card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+  }
+
+  .card__footer {
+    --card-footer-border: var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: var(--card-gap);
+    border-top: 1px solid var(--card-footer-border);
+    padding-top: var(--card-gap);
+  }
+}
