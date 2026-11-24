@@ -16,3 +16,6 @@ screenshots
 
 # scratch clone used to verify the remote
 .clone-test
+
+# handoff prompt — contains a live GitHub token, never commit it
+CONTINUE.md

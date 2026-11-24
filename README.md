@@ -173,6 +173,27 @@ utility namespace.
 
 ---
 
+## Deterministic builds
+
+`src/style.css` starts with `@import "tailwindcss" source(none);`, which turns
+Tailwind's **automatic content detection off**. Without it, Tailwind v4 scans
+every non-gitignored file in the project — Markdown, shell scripts, even
+comments — for class-like words and emits utilities for whatever it finds, so
+the CSS output depends on prose rather than on code.
+
+With `source(none)`, the only sources are the explicit directives:
+
+```css
+@source "../index.html";
+@source "./**/*.{ts,tsx}";
+```
+
+The result: a fresh clone and a working copy produce **byte-identical CSS**
+(verified — same SHA-256), so a stray word in a README can't silently change
+your bundle.
+
+---
+
 ## Dark mode
 
 `src/tokens/semantic.css` defines a `.dark` block. Toggle the class on `<html>`:
