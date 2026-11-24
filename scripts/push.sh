@@ -28,8 +28,10 @@ fi
 
 # Repo-local, relative helper path — keeps working wherever this is checked
 # out, and survives a fresh clone without any extra setup.
+# The leading "!" makes git run the rest as a shell command (run from the
+# repo root) instead of looking for a `git credential-<name>` subcommand.
 chmod +x scripts/git-credentials-helper.sh
-git config --local credential.helper "scripts/git-credentials-helper.sh"
+git config --local credential.helper "!./scripts/git-credentials-helper.sh"
 
 msg="${1:-chore: sync $(date '+%Y-%m-%d %H:%M:%S')}"
 
