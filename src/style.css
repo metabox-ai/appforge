@@ -14,7 +14,16 @@
    ========================================================================== */
 
 /* 1 ── Tailwind ─────────────────────────────────────────────────────────── */
-@import "tailwindcss";
+/*
+ * `source(none)` disables Tailwind's automatic content detection.
+ *
+ * Without it, Tailwind v4 scans every non-gitignored file in the project for
+ * class-like words — including Markdown, shell scripts and comments — and
+ * emits utilities for anything it finds. That makes the output depend on
+ * prose, not just on code. With `source(none)` the only sources are the
+ * explicit @source directives below, so the build is deterministic.
+ */
+@import "tailwindcss" source(none);
 
 /* 2 ── Global design tokens ─────────────────────────────────────────────── */
 @import "./tokens/semantic.css";
@@ -26,7 +35,8 @@
 
 /* 4 ── Tailwind directives ──────────────────────────────────────────────── */
 
-/* Class-name scanning. Paths are relative to this file. */
+/* Class-name scanning. Paths are relative to this file.
+   These are the ONLY sources — see the `source(none)` note above. */
 @source "../index.html";
 @source "./**/*.{ts,tsx}";
 
