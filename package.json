@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "new:component": "node scripts/new-component.mjs",
-    "verify": "node scripts/verify.cjs"
+    "verify": "node scripts/verify.cjs",
+    "push": "bash scripts/push.sh"
   },
   "dependencies": {
     "react": "^19.2.0",
