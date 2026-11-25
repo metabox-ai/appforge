@@ -8,6 +8,11 @@ its own tokens.
 - **Component tokens** → `src/components/<name>/style.css`
 - **Single stylesheet entry** → `src/style.css`
 
+> **Using a component?** Start at [`agents/README.md`](agents/README.md) — one
+> usage doc per component, covering what it is for, when to reach for it, and
+> how to render it. That folder is deliberately implementation-free; this
+> README is for working on the system itself.
+
 ---
 
 ## The token model
@@ -41,6 +46,16 @@ uses it.
 ## Project layout
 
 ```
+agents/                            ← USAGE docs, one file per component
+├── README.md                      ← index
+└── docs/
+    ├── button.md
+    ├── badge.md
+    ├── card.md
+    ├── section.md
+    ├── shape-section.md
+    ├── intro.md
+    └── intro-detailed.md
 src/
 ├── style.css                      ← Tailwind entry point (imports everything)
 ├── tokens/
