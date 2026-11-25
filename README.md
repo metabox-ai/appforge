@@ -311,18 +311,31 @@ ending in a plain rectangle.
 That split matters twice:
 
 - The silhouette never clips the **content** — only the fill.
-- A CSS `mask` (or `clip-path`) clips an element's *entire* painted output,
-  including `background-image`. So `bgImage` is cut by exactly the same
-  outline as a solid fill. One silhouette, either kind of background.
+- A CSS `mask` clips an element's *entire* painted output, including
+  `background-image`. So `bgImage` is cut by exactly the same outline as a
+  solid fill. One silhouette, either kind of background.
 
-The two silhouettes use different tools, because they need different things:
+The mask is two layers: a solid layer that keeps the whole section, and a
+silhouette tile that is subtracted from it. The tile is exactly as tall as the
+**shape zone** — a band the section reserves on the shaped side — so the cut
+can never travel past the zone into the content:
 
-- **`slant`** uses `clip-path: polygon(...)`. The cut needs a *fixed* depth — a
-  depth that scaled with the section's height would flatten into an almost
-  invisible lean across a wide, short section.
-- **`cloud`** uses a `mask` made from an inline SVG tile of half-ellipse
-  bumps, repeated with `mask-repeat: repeat-x`. The tile has a fixed width, so
-  the bumps stay the same size however wide the section gets.
+```
+┌─────────────────────────┐
+│  shape zone   (masked)  │  ← the silhouette lives here, and only here
+├─────────────────────────┤
+│  content + its padding  │  ← always fully backed by the fill
+└─────────────────────────┘
+```
+
+The content therefore keeps its full padding whatever its length, and the
+silhouette keeps a fixed depth whatever the section's height.
+
+The two silhouettes use different tiles, because they need different things:
+
+- **`slant`** is a single diagonal across the full width of the section.
+- **`cloud`** is a repeating tile of half-ellipse bumps, so the bumps stay the
+  same size however wide the section gets.
 
 ---
 

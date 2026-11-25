@@ -100,13 +100,35 @@ import { ShapeSection } from './components'
 </ShapeSection>
 ```
 
+## The shape zone
+
+The silhouette has room of its own. The section reserves a zone on the shaped
+side, and the cut happens inside that zone — so the content always keeps its
+full padding, whatever the content's length and whatever the silhouette is.
+
+```
+┌─────────────────────────┐
+│  shape zone   (masked)  │  ← the silhouette lives here, and only here
+├─────────────────────────┤
+│  content + its padding  │  ← always fully backed by the fill
+└─────────────────────────┘
+```
+
+This is why you never have to add extra padding to keep content clear of the
+edge — the component does it for you. Two practical consequences:
+
+- **The section is a little taller than its content.** The zone sits between
+  the content and the edge of the section.
+- **The silhouette keeps a fixed depth.** It does not grow as the section
+  grows, so a long section and a short one get the same shape.
+
 ## Notes
 
 - **The silhouette only affects the background.** Your content is never cut,
   clipped or hidden by the shape — only the fill behind it is.
-- The shape scales with the section, so a taller band gets a proportionally
-  deeper cut. If you need the same depth regardless of height, that is a
-  deliberate, fixed cut.
+- **A background image stays continuous.** The image covers the whole section
+  and the silhouette is cut out of it, so there is no seam where the zone
+  meets the content.
 - Use `bg` for a flat fill and `bgImage` for a photograph. Setting both means
   the image paints over the colour.
 

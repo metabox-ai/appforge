@@ -7,22 +7,30 @@
  * How the shaping works
  * ---------------------
  * The coloured surface lives on a dedicated background layer (`.shape-section__bg`)
- * that sits behind the content and carries a CSS mask. A mask clips an element's
- * entire painted output — background colour AND background image alike — so an
- * image background is cut by exactly the same silhouette as a solid fill.
+ * behind the content. A CSS mask clips an element's entire painted output —
+ * background colour AND background image alike — so an image background is cut
+ * by exactly the same silhouette as a solid fill.
  *
  * The content lives on its own layer, so the mask never clips the text.
  *
- * The mask is an inline SVG data URI. `preserveAspectRatio="none"` lets the
- * silhouette stretch to whatever size the section is, so the cut scales with
- * the layout instead of repeating at a fixed size.
+ * The mask is built from TWO layers:
  *
- * Padding follows the same spacing scale as Section: the `px` / `py` props
- * select a step, and each step is a token declared here.
+ *   1. a solid layer that keeps the whole section
+ *   2. a silhouette tile that is SUBTRACTED from it
+ *
+ * The tile is exactly as tall as the shape zone, so the cut can never travel
+ * past the zone into the content. The zone is reserved by adding it to the
+ * padding on the shaped side, which is what guarantees the content always
+ * keeps its own breathing room.
+ *
+ *   ┌─────────────────────────┐
+ *   │  shape zone   (masked)  │  ← the silhouette lives here, and only here
+ *   ├─────────────────────────┤
+ *   │  content + its padding  │  ← always fully backed by the fill
+ *   └─────────────────────────┘
  *
  * JSX usage:
  *   <section class="shape-section shape-section--cloud-bottom shape-section--py-8">
- *   <section class="shape-section shape-section--slant-top">
  */
 
 @layer components {
@@ -32,12 +40,18 @@
     --shape-section-foreground: var(--foreground);
     --shape-section-padding-inline: var(--shape-section-padding-inline-4);
     --shape-section-padding-block: var(--shape-section-padding-block-4);
+
+    /*
+     * How deep the shape zone is. It is reserved on the shaped side of the
+     * section, so the silhouette has room to live without ever reaching the
+     * content's padding.
+     */
+    --shape-section-shape-depth: 2.5rem;
+
     --shape-section-mask-image: none;
     --shape-section-mask-size: 100% 100%;
+    --shape-section-mask-position: left bottom;
     --shape-section-mask-repeat: no-repeat;
-    --shape-section-mask-position: center;
-    --shape-section-clip-path: none;
-    --shape-section-slant-depth: 2.5rem;
 
     /* ── spacing scale ───────────────────────────────────────────────── */
     --shape-section-padding-inline-0: 0rem;
@@ -77,16 +91,23 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    -webkit-mask-image: var(--shape-section-mask-image);
-    mask-image: var(--shape-section-mask-image);
-    -webkit-mask-size: var(--shape-section-mask-size);
-    mask-size: var(--shape-section-mask-size);
-    -webkit-mask-repeat: var(--shape-section-mask-repeat);
-    mask-repeat: var(--shape-section-mask-repeat);
-    -webkit-mask-position: var(--shape-section-mask-position);
-    mask-position: var(--shape-section-mask-position);
-    mask-mode: alpha;
-    clip-path: var(--shape-section-clip-path);
+
+    /*
+     * Layer 1 keeps everything; layer 2 (the silhouette) is subtracted.
+     * `-webkit-mask-composite` is the legacy spelling of the same operator.
+     */
+    -webkit-mask-image: linear-gradient(#fff, #fff),
+      var(--shape-section-mask-image);
+    mask-image: linear-gradient(#fff, #fff), var(--shape-section-mask-image);
+    -webkit-mask-size: 100% 100%, var(--shape-section-mask-size);
+    mask-size: 100% 100%, var(--shape-section-mask-size);
+    -webkit-mask-position: center, var(--shape-section-mask-position);
+    mask-position: center, var(--shape-section-mask-position);
+    -webkit-mask-repeat: no-repeat, var(--shape-section-mask-repeat);
+    mask-repeat: no-repeat, var(--shape-section-mask-repeat);
+    -webkit-mask-composite: source-out, source-out;
+    mask-composite: subtract, subtract;
+
     pointer-events: none;
   }
 
@@ -98,54 +119,55 @@
 
   /* ── shapes ─────────────────────────────────────────────────────────── */
   /*
-   * Slant — a single diagonal cut across the full width.
+   * Slant — a single diagonal cut across the full width. The tile spans the
+   * whole width of the section and is exactly one shape-zone deep, so the
+   * diagonal is as steep as the section is wide allows.
    *
-   * A clip-path is used rather than a mask here, because the cut needs a
-   * *fixed* depth: a depth that scales with the section height would flatten
-   * into an almost invisible lean on a wide, short section. A clip-path also
-   * clips the background image, exactly like the mask does.
+   * Cloud — a scalloped edge of half-ellipse bumps. The tile is a fixed
+   * width and repeats across the section, so the bumps stay the same size
+   * however wide the section gets.
    *
-   * Top: the cut runs up from the left, so the top-left corner is shaved off.
-   * Bottom: the vertical mirror of that, shaving off the bottom-left corner.
+   * In both cases the tile is masked out of the fill, so the shape zone ends
+   * up holding the silhouette and the content zone stays intact.
    */
   .shape-section--slant-top {
-    --shape-section-clip-path: polygon(
-      0 var(--shape-section-slant-depth),
-      100% 0,
-      100% 100%,
-      0 100%
+    --shape-section-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L0,100 Z' fill='%23fff'/%3E%3C/svg%3E");
+    --shape-section-mask-size: 100% var(--shape-section-shape-depth);
+    --shape-section-mask-repeat: no-repeat;
+    --shape-section-mask-position: left top;
+    padding-top: calc(
+      var(--shape-section-padding-block) + var(--shape-section-shape-depth)
     );
   }
 
   .shape-section--slant-bottom {
-    --shape-section-clip-path: polygon(
-      0 0,
-      100% 0,
-      100% calc(100% - var(--shape-section-slant-depth)),
-      0 100%
+    --shape-section-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 L100,0 L100,100 Z' fill='%23fff'/%3E%3C/svg%3E");
+    --shape-section-mask-size: 100% var(--shape-section-shape-depth);
+    --shape-section-mask-repeat: no-repeat;
+    --shape-section-mask-position: left bottom;
+    padding-bottom: calc(
+      var(--shape-section-padding-block) + var(--shape-section-shape-depth)
     );
   }
 
-  /*
-   * Cloud — a scalloped edge made of shallow half-ellipse bumps.
-   *
-   * The mask is a 360px-wide tile that repeats across the section, so the
-   * bumps keep a fixed width no matter how wide the section is. The tile
-   * stretches vertically, which makes the bump depth a proportion of the
-   * section's height.
-   */
-  .shape-section--cloud-bottom {
-    --shape-section-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 H360 V85 A120,15 0 0 1 240,85 A120,15 0 0 1 120,85 A120,15 0 0 1 0,85 Z' fill='%23fff'/%3E%3C/svg%3E");
-    --shape-section-mask-size: 360px 100%;
+  .shape-section--cloud-top {
+    --shape-section-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M0,60 A60,60 0 0 1 120,60 A60,60 0 0 1 240,60 L240,0 L0,0 Z' fill='%23fff'/%3E%3C/svg%3E");
+    --shape-section-mask-size: 240px var(--shape-section-shape-depth);
     --shape-section-mask-repeat: repeat-x;
     --shape-section-mask-position: left top;
+    padding-top: calc(
+      var(--shape-section-padding-block) + var(--shape-section-shape-depth)
+    );
   }
 
-  .shape-section--cloud-top {
-    --shape-section-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 H360 V15 A120,15 0 0 0 240,15 A120,15 0 0 0 120,15 A120,15 0 0 0 0,15 Z' fill='%23fff'/%3E%3C/svg%3E");
-    --shape-section-mask-size: 360px 100%;
+  .shape-section--cloud-bottom {
+    --shape-section-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cpath d='M0,0 A60,60 0 0 0 120,0 A60,60 0 0 0 240,0 L240,60 L0,60 Z' fill='%23fff'/%3E%3C/svg%3E");
+    --shape-section-mask-size: 240px var(--shape-section-shape-depth);
     --shape-section-mask-repeat: repeat-x;
-    --shape-section-mask-position: left top;
+    --shape-section-mask-position: left bottom;
+    padding-bottom: calc(
+      var(--shape-section-padding-block) + var(--shape-section-shape-depth)
+    );
   }
 
   /* ── inline (horizontal) padding steps ──────────────────────────────── */

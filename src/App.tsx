@@ -169,9 +169,10 @@ export default function App() {
         <CardHeader>
           <CardTitle>ShapeSection</CardTitle>
           <CardDescription>
-            A <code>&lt;section&gt;</code> whose edge is cut by a CSS mask or
-            clip-path on its background layer. The cut applies to whatever fills
-            that layer — solid colour or image.
+            A <code>&lt;section&gt;</code> whose edge is cut by a CSS mask on its
+            background layer. The mask applies to whatever fills that layer —
+            solid colour or image — and the silhouette lives in its own zone, so
+            it never reaches the content's padding.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
