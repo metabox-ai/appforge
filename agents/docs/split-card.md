@@ -21,6 +21,26 @@ full width of the section by cancelling the section's inline padding, so the
 card reaches the section's own edges instead of floating in the middle of its
 content column.
 
+## The two sides
+
+The children *are* the sides: the first child becomes the left side, and
+everything after it becomes the right side. So the common case is simply two
+children in order.
+
+```tsx
+<SplitCard border radius="lg">
+  <p>Description</p>   {/* left */}
+  <img src="…" />      {/* right */}
+</SplitCard>
+```
+
+With one child, the left side takes the whole width. With three, the first is
+the left side and the other two share the right side.
+
+When a side needs to be empty, or when the order in the markup does not match
+the layout, name the sides explicitly with `left` and `right` — they take
+precedence over the children.
+
 ## When to use it
 
 Use a SplitCard for a feature that has a description and a visual: one side
@@ -40,8 +60,9 @@ Reach for something else when:
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `left` | `ReactNode` | — | Content of the left side. `children` is an alias for this. |
-| `right` | `ReactNode` | — | Content of the right side. Omit it and the left side takes the full width. |
+| `left` | `ReactNode` | — | Content of the left side. Takes precedence over the first child. |
+| `right` | `ReactNode` | — | Content of the right side. Takes precedence over the remaining children. |
+| `children` | `ReactNode` | — | The two sides, in order: the first child is the left side, everything after it is the right side. |
 | `border` | `boolean` | `false` | Draws a 1px border, and the divider line between the two sides. |
 | `radius` | `'none' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'none'` | Corner radius of the card. |
 | `bg` | `string` | `transparent` | Background colour. Pass a token, e.g. `bg="var(--surface-secondary)"`. |
@@ -100,6 +121,9 @@ A card that stacks with the media first on mobile:
 - **Do not add your own padding inside a side.** The inner spacing is
   handled for you. Use `flush` when you want a side to run edge to edge,
   and give the other side its own padding inside its content.
+- **Give each side one child.** The children are the sides — the first one is
+  the left side, the rest is the right. If one side needs several blocks,
+  wrap them in a single element so the split stays unambiguous.
 - **The card takes the full width of its section.** That is deliberate — it
   is the reason the layout lives inside a section rather than replacing one.
   To keep it narrower, constrain the section, not the card.
