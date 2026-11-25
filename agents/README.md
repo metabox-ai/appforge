@@ -23,6 +23,7 @@ If you need to change a component rather than use one, read the source under
 | ShapeSection | [docs/shape-section.md](docs/shape-section.md) | A Section whose edge is cut by a silhouette |
 | Intro | [docs/intro.md](docs/intro.md) | Layout: eyebrow above a heading |
 | IntroDetailed | [docs/intro-detailed.md](docs/intro-detailed.md) | Layout: eyebrow, heading, byline and paragraph |
+| SplitCard | [docs/split-card.md](docs/split-card.md) | Layout: two-column postcard — description beside media |
 
 ## How to read these
 

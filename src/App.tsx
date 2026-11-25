@@ -12,7 +12,7 @@ import {
   Section,
   ShapeSection,
 } from './components'
-import { Intro, IntroDetailed } from './layout'
+import { Intro, IntroDetailed, SplitCard } from './layout'
 
 const SWATCHES = [
   { name: 'primary', varName: '--primary' },
@@ -269,6 +269,65 @@ export default function App() {
             detail="Subtitle, title, slogan and detail — the slogan attributes
             the block, the detail carries the body copy."
           />
+        </CardContent>
+      </Card>
+
+      {/* ── SplitCard ──────────────────────────────────────────────────── */}
+      <Card>
+        <CardHeader>
+          <CardTitle>SplitCard</CardTitle>
+          <CardDescription>
+            A two-column postcard that lives inside a section. It cancels the
+            section's inline padding to take the full width, and stacks into
+            one column on narrow viewports — <code>responsiveTop</code> picks
+            which side leads the stack.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-6">
+          <Section px={6} py={0} bg="var(--surface-secondary)">
+            <SplitCard border radius="lg" bg="var(--surface)" py={6}>
+              <div className="flex flex-col gap-2">
+                <h3 className="text-lg font-semibold tracking-tight">
+                  One side describes it
+                </h3>
+                <p className="text-content-secondary text-sm">
+                  The other side shows it. The inner spacing is padding, so the
+                  card's own background and border stay continuous behind the
+                  content.
+                </p>
+              </div>
+              <div
+                className="h-40 w-full rounded-md"
+                style={{ backgroundImage: `url("${GRADIENT_IMAGE}")` }}
+              />
+            </SplitCard>
+          </Section>
+
+          <Section px={6} py={0} bg="var(--surface-secondary)">
+            <SplitCard
+              border
+              radius="lg"
+              bg="var(--surface)"
+              py={6}
+              flush="right"
+              responsiveTop="right"
+            >
+              <div className="flex flex-col gap-2">
+                <h3 className="text-lg font-semibold tracking-tight">
+                  Flush media side
+                </h3>
+                <p className="text-content-secondary text-sm">
+                  <code>flush</code> drops the inner padding so the media runs
+                  edge to edge. <code>responsiveTop="right"</code> keeps the
+                  media first once the card stacks.
+                </p>
+              </div>
+              <div
+                className="h-40 w-full"
+                style={{ backgroundImage: `url("${GRADIENT_IMAGE}")` }}
+              />
+            </SplitCard>
+          </Section>
         </CardContent>
       </Card>
 

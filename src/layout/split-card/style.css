@@ -1,0 +1,246 @@
+/*
+ * SplitCard — abstract layout, component-scoped semantic tokens
+ * --------------------------------------------------------------------------
+ * A two-column card: one side carries the description, the other the media.
+ * It reads like a big postcard dropped inside a section.
+ *
+ * Tokens are namespaced `--split-card-*` and reference the global tokens, so
+ * the card re-themes automatically in light/dark mode.
+ *
+ * How it relates to its section
+ * -----------------------------
+ * The card is meant to live inside a `Section`. It takes the full width of
+ * that section's content by cancelling the section's inline padding: the
+ * section publishes its own padding as `--section-padding-inline`, and the
+ * custom property inherits down to this card, so the bleed is always exactly
+ * as wide as the padding it replaces.
+ *
+ *   ┌───────────────────────────────────────────────┐  ← section border
+ *   │ ┌───────────────────────────────────────────┐ │
+ *   │ │                split card                 │ │  ← bleeds out of
+ *   │ └───────────────────────────────────────────┘ │    the section padding
+ *   └───────────────────────────────────────────────┘
+ *
+ * Padding vs margin for the inner spacing
+ * ----------------------------------------
+ * The space around each side's own content is PADDING on the column, not a
+ * margin on an inner wrapper. Two reasons:
+ *
+ *   1. Padding stays inside the card's own box, so the card's background and
+ *      border remain continuous behind the content. A margin would let the
+ *      content's background spill past the card's edge.
+ *   2. Margins between the two columns collapse and fight each other; padding
+ *      never collapses, so the gap between the columns is always what it says.
+ *
+ * The block rhythm around the card (the `py` prop) is the one place a margin
+ * is used — it belongs OUTSIDE the card's box, where it cannot disturb the
+ * inner spacing.
+ *
+ * JSX usage:
+ *   <SplitCard border radius="lg" bg="var(--surface-secondary)" py={6}>
+ *     <p>Description</p>
+ *     <img src="…" />
+ *   </SplitCard>
+ */
+
+@layer components {
+  .split-card {
+    /* ── semantic tokens ─────────────────────────────────────────────── */
+    --split-card-background: transparent;
+    --split-card-foreground: var(--foreground);
+
+    /* Border is off by default; `border` prop turns it on. */
+    --split-card-border-width: 0;
+    --split-card-border-color: var(--border);
+    --split-card-radius: 0rem;
+
+    /* The line between the two sides, shown together with the border. */
+    --split-card-divider-width: 0px;
+    --split-card-divider-color: var(--border-subtle);
+
+    /* Inner spacing of each side — padding, never margin. */
+    --split-card-column-padding-inline: 1.5rem;
+    --split-card-column-padding-block: 2rem;
+
+    /* Block rhythm around the card. */
+    --split-card-margin-block: var(--split-card-margin-block-4);
+
+    /*
+     * How far the card reaches out of its section's inline padding. The
+     * section publishes `--section-padding-inline`, and custom properties
+     * inherit, so this resolves to the section's own padding — and to 0 when
+     * the card is used outside a section.
+     */
+    --split-card-bleed: var(--section-padding-inline, 0px);
+
+    /* ── spacing scale (used by the `py` prop) ────────────────────────── */
+    --split-card-margin-block-0: 0rem;
+    --split-card-margin-block-1: 0.25rem;
+    --split-card-margin-block-2: 0.5rem;
+    --split-card-margin-block-3: 0.75rem;
+    --split-card-margin-block-4: 1rem;
+    --split-card-margin-block-5: 1.5rem;
+    --split-card-margin-block-6: 2rem;
+    --split-card-margin-block-7: 2.5rem;
+    --split-card-margin-block-8: 3rem;
+
+    /* ── component rules ─────────────────────────────────────────────── */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    box-sizing: border-box;
+    color: var(--split-card-foreground);
+    background-color: var(--split-card-background);
+    border: var(--split-card-border-width) solid var(--split-card-border-color);
+    border-radius: var(--split-card-radius);
+    overflow: hidden;
+    margin-block: var(--split-card-margin-block);
+    margin-inline: calc(-1 * var(--split-card-bleed));
+  }
+
+  /* ── sides ──────────────────────────────────────────────────────────── */
+  .split-card__col {
+    --split-card-col-padding-inline: var(--split-card-column-padding-inline);
+    --split-card-col-padding-block: var(--split-card-column-padding-block);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: var(--split-card-col-padding-block)
+      var(--split-card-col-padding-inline);
+  }
+
+  /* A single-sided card takes the whole width. */
+  .split-card--single {
+    grid-template-columns: 1fr;
+  }
+
+  /* ── border variant ────────────────────────────────────────────────── */
+  .split-card--border {
+    --split-card-border-width: 1px;
+    --split-card-divider-width: 1px;
+  }
+
+  /* The divider belongs to the right side, so it can be styled on its own. */
+  .split-card--border .split-card__col--right {
+    border-inline-start: var(--split-card-divider-width) solid
+      var(--split-card-divider-color);
+  }
+
+  /* ── flush variant ─────────────────────────────────────────────────── */
+  /*
+   * With the padding gone, a media side can run edge to edge while the
+   * description side keeps its own rhythm.
+   */
+  .split-card--flush {
+    --split-card-column-padding-inline: 0rem;
+    --split-card-column-padding-block: 0rem;
+  }
+
+  .split-card--flush-left .split-card__col--left {
+    --split-card-col-padding-inline: 0rem;
+    --split-card-col-padding-block: 0rem;
+  }
+
+  .split-card--flush-right .split-card__col--right {
+    --split-card-col-padding-inline: 0rem;
+    --split-card-col-padding-block: 0rem;
+  }
+
+  /* ── radius scale ──────────────────────────────────────────────────── */
+  .split-card--radius-none {
+    --split-card-radius: 0rem;
+  }
+
+  .split-card--radius-sm {
+    --split-card-radius: 0.25rem;
+  }
+
+  .split-card--radius-md {
+    --split-card-radius: 0.5rem;
+  }
+
+  .split-card--radius-lg {
+    --split-card-radius: 0.75rem;
+  }
+
+  .split-card--radius-xl {
+    --split-card-radius: 1rem;
+  }
+
+  .split-card--radius-full {
+    --split-card-radius: 9999px;
+  }
+
+  /* ── block spacing steps (used by the `py` prop) ───────────────────── */
+  .split-card--py-0 {
+    --split-card-margin-block: var(--split-card-margin-block-0);
+  }
+
+  .split-card--py-1 {
+    --split-card-margin-block: var(--split-card-margin-block-1);
+  }
+
+  .split-card--py-2 {
+    --split-card-margin-block: var(--split-card-margin-block-2);
+  }
+
+  .split-card--py-3 {
+    --split-card-margin-block: var(--split-card-margin-block-3);
+  }
+
+  .split-card--py-4 {
+    --split-card-margin-block: var(--split-card-margin-block-4);
+  }
+
+  .split-card--py-5 {
+    --split-card-margin-block: var(--split-card-margin-block-5);
+  }
+
+  .split-card--py-6 {
+    --split-card-margin-block: var(--split-card-margin-block-6);
+  }
+
+  .split-card--py-7 {
+    --split-card-margin-block: var(--split-card-margin-block-7);
+  }
+
+  .split-card--py-8 {
+    --split-card-margin-block: var(--split-card-margin-block-8);
+  }
+
+  /* ── narrow viewport ───────────────────────────────────────────────── */
+  /*
+   * Below the breakpoint the card stacks into one column. The side named by
+   * `responsiveTop` comes first — `left` by default.
+   */
+  @media (max-width: 47.99rem) {
+    .split-card {
+      grid-template-columns: 1fr;
+    }
+
+    .split-card__col--left {
+      order: 1;
+    }
+
+    .split-card__col--right {
+      order: 2;
+    }
+
+    .split-card--top-right .split-card__col--left {
+      order: 2;
+    }
+
+    .split-card--top-right .split-card__col--right {
+      order: 1;
+    }
+
+    /* The divider turns with the card: vertical becomes horizontal. */
+    .split-card--border .split-card__col--right {
+      border-inline-start: 0;
+      border-block-start: var(--split-card-divider-width) solid
+        var(--split-card-divider-color);
+    }
+  }
+}

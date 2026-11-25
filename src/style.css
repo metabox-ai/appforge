@@ -35,6 +35,7 @@
  * concrete component of their own; each slot is a place for one to go.
  */
 @import "./layout/intro/style.css";
+@import "./layout/split-card/style.css";
 
 /* 4 ── Component styles ─────────────────────────────────────────────────── */
 @import "./components/button/style.css";

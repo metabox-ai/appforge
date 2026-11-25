@@ -4,3 +4,4 @@
  * structure (layers, order, geometry) and never a concrete component.
  */
 export * from './intro'
+export * from './split-card'
