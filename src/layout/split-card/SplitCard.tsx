@@ -1,5 +1,5 @@
-import { Children } from 'react'
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+import { Children } from 'react'
 
 /** Which of the two sides of the card. */
 export type SplitCardSide = 'left' | 'right'
@@ -35,6 +35,11 @@ export interface SplitCardProps extends HTMLAttributes<HTMLDivElement> {
    */
   right?: ReactNode
   /**
+   * Bleed states whether it should take the entire section width 
+   * ignoring section inline padding.
+   */
+  bleed?: boolean
+  /**
    * The two sides, in order. The first child becomes the left side and
    * everything after it becomes the right side.
    */
@@ -54,6 +59,7 @@ export function SplitCard({
   flush = false,
   left,
   right,
+  bleed,
   className = '',
   children,
   style,
@@ -75,6 +81,7 @@ export function SplitCard({
 
   const classes = [
     'split-card',
+    bleed && 'split-card--bleed',
     border ? 'split-card--border' : '',
     `split-card--radius-${radius}`,
     `split-card--top-${responsiveTop}`,

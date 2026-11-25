@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-import { Badge } from './components/badge'
 import {
   Button,
   Card,
@@ -12,6 +11,7 @@ import {
   Section,
   ShapeSection,
 } from './components'
+import { Badge } from './components/badge'
 import { Intro, IntroDetailed, SplitCard } from './layout'
 
 const SWATCHES = [
@@ -305,6 +305,7 @@ export default function App() {
 
           <Section px={6} py={0} bg="var(--surface-secondary)">
             <SplitCard
+              bleed
               border
               radius="lg"
               bg="var(--surface)"

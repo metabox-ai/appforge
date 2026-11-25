@@ -9,16 +9,13 @@
  *
  * How it relates to its section
  * -----------------------------
- * The card is meant to live inside a `Section`. It takes the full width of
- * that section's content by cancelling the section's inline padding: the
- * section publishes its own padding as `--section-padding-inline`, and the
- * custom property inherits down to this card, so the bleed is always exactly
- * as wide as the padding it replaces.
+ * The card is meant to live inside a `Section`. It takes the width of
+ * that section's content.
  *
  *   ┌───────────────────────────────────────────────┐  ← section border
  *   │ ┌───────────────────────────────────────────┐ │
- *   │ │                split card                 │ │  ← bleeds out of
- *   │ └───────────────────────────────────────────┘ │    the section padding
+ *   │ │                split card                 │ │  
+ *   │ └───────────────────────────────────────────┘ │   
  *   └───────────────────────────────────────────────┘
  *
  * Padding vs margin for the inner spacing
@@ -94,6 +91,9 @@
     border-radius: var(--split-card-radius);
     overflow: hidden;
     margin-block: var(--split-card-margin-block);
+  }
+
+  .split-card--bleed {
     margin-inline: calc(-1 * var(--split-card-bleed));
   }
 
@@ -107,8 +107,7 @@
     justify-content: center;
     box-sizing: border-box;
     min-width: 0;
-    padding: var(--split-card-col-padding-block)
-      var(--split-card-col-padding-inline);
+    padding: var(--split-card-col-padding-block) var(--split-card-col-padding-inline);
   }
 
   /* A single-sided card takes the whole width. */
@@ -124,8 +123,7 @@
 
   /* The divider belongs to the right side, so it can be styled on its own. */
   .split-card--border .split-card__col--right {
-    border-inline-start: var(--split-card-divider-width) solid
-      var(--split-card-divider-color);
+    border-inline-start: var(--split-card-divider-width) solid var(--split-card-divider-color);
   }
 
   /* ── flush variant ─────────────────────────────────────────────────── */
@@ -239,8 +237,7 @@
     /* The divider turns with the card: vertical becomes horizontal. */
     .split-card--border .split-card__col--right {
       border-inline-start: 0;
-      border-block-start: var(--split-card-divider-width) solid
-        var(--split-card-divider-color);
+      border-block-start: var(--split-card-divider-width) solid var(--split-card-divider-color);
     }
   }
 }

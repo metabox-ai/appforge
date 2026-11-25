@@ -16,8 +16,8 @@ It renders no concrete components itself. Each side takes whatever you supply
 decides only the geometry: the columns, the gutter between them, the radius,
 the border and the order once the card stacks on a narrow viewport.
 
-It is designed to live inside a [Section](section.md). There it takes the
-full width of the section by cancelling the section's inline padding, so the
+It is designed to live inside a [Section](section.md). There it normally takes the
+available width. If `bleed` prop is passed the it takes the full width of the section by cancelling the section's inline padding, so the
 card reaches the section's own edges instead of floating in the middle of its
 content column.
 
@@ -67,6 +67,7 @@ Reach for something else when:
 | `radius` | `'none' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'none'` | Corner radius of the card. |
 | `bg` | `string` | `transparent` | Background colour. Pass a token, e.g. `bg="var(--surface-secondary)"`. |
 | `responsiveTop` | `'left' \| 'right'` | `'left'` | Which side comes first once the card stacks on a narrow viewport. |
+| `bleed` | `boolean` | `false` | Optional bleed says to expand into entire full width |
 | `py` | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | `4` | Block spacing around the card — the same rhythm a section child gets by default. |
 | `flush` | `boolean \| 'left' \| 'right'` | `false` | Removes the inner padding of one or both sides, so media can run edge to edge. |
 | `className` | `string` | `''` | Appended to the layout's own classes. |
